@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 
 #dataframe creation
-file=ExcelFile(r'C:\Users\ludov\Documents\Python\efficient frontier portfolio\Efficient_Frontier_Portfolio\African_Indexes_Portfolio.xlsx')
+file=ExcelFile(r'African_Indexes_Portfolio.xlsx')
 df=file.parse('Data')
 
 #length of downloaded historical data
