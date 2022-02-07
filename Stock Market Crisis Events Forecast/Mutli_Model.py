@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 """
-@author: ludovic de Villelongue
+@author: Ludovic de Villelongue
 """
 #Libraries
 import pandas as pd
