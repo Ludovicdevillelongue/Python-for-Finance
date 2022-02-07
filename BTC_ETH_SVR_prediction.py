@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@authors: ludovic de Villelongue, Amine Mounazil, Emmanuel Zheng
+"""
+
 from datetime import datetime, timezone, timedelta
 from enum import Enum
 from typing import List
