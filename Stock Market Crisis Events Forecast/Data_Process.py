@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[7]:
-
-
-get_ipython().system('pip install investpy')
+# -*- coding: utf-8 -*-
+"""
+@authors: Amine Mounazil, Ludovic de Villelongue
+"""
 import investpy
 import pandas as pd
 from functools import reduce
@@ -17,10 +14,6 @@ import warnings
 import random
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-
-
-# In[33]:
-
 
 ###########
 ## Utils ##
@@ -200,10 +193,6 @@ def generate_datasets_crypto(df):
     data['Classification_1D_Global'] = np.where(data['Classification_1D_Bitcoin'] == 1, 1, 0)
     return data.iloc[:,-1:]
 
-
-# In[14]:
-
-
 ####################
 ## Data selection ##
 ####################
@@ -249,9 +238,6 @@ dict_indices_americas = {index : get_indices(index, country=country, start = sta
 dict_indices_europe = {index : get_indices(index, country=country, start = start_date, end = end_date) for country, index in Dict_Indices_Europe.items()}
 dict_indices_asia = {index: get_indices(index, country=country, start=start_date, end=end_date) for country, index in
                      Dict_Indices_Asia.items()}
-
-
-# In[15]:
 
 
 #####################
@@ -302,11 +288,7 @@ df_indices_europe.to_csv(r'~/path/df_indices_europe.csv', index = True)
 df_indices_asia.to_csv(r'~/path/df_indices_asia.csv', index = True)
 
 
-# In[ ]:
-
-
 # 2. Derive the continuously compounded rate of daily returns, by calculating the log-returns [ln]
-
 #Calculate returns
 df_currencies_ret = compute_returns(df_currencies)
 df_bonds_ret = compute_returns(df_bonds)
@@ -316,7 +298,6 @@ df_indices_europe_ret = compute_returns(df_indices_europe)
 df_indices_asia_ret = compute_returns(df_indices_asia)
 
 # 3. Calculate the daily volatility of return [ln2], by squaring the log-returns.
-
 #Calculate volatilities
 df_currencies_vol = compute_vol(df_currencies)
 df_bonds_vol = compute_vol(df_bonds)
@@ -324,9 +305,6 @@ df_crypto_vol = compute_returnse(df_vol)
 df_indices_americas_vol = compute_vol(df_indices_americas)
 df_indices_europe_vol = compute_vol(df_indices_europe)
 df_indices_asia_vol = compute_vol(df_indices_asia)
-
-
-# In[34]:
 
 
 # 4. Calculate lagged variables on a daily basis for each crisis indicator (regional/global),
@@ -363,10 +341,6 @@ df_indices_americas_L20D = clean_data(df_indices_americas_L20D)
 df_indices_europe_L20D = clean_data(df_indices_europe_L20D)
 df_indices_asia_L20D = clean_data(df_indices_asia_L20D)
 
-
-# In[35]:
-
-
 # Identify crisis events
 currencies_events = identify_crisis_event(df_currencies)
 bonds_events = identify_crisis_event(df_bonds)
@@ -389,23 +363,17 @@ indices_americas_events_L20D = identify_crisis_event(df_indices_americas_L20D)
 indices_europe_events_L20D = identify_crisis_event(df_indices_europe_L20D)
 indices_asia_events_L20D = identify_crisis_event(df_indices_asia_L20D)
 
-
-# In[36]:
-
-
 # Compute crisis events for bonds and currencies and crypto
 currencies_events = compute_crisis_events_bc(currencies_events)
 bonds_events = compute_crisis_events_bc(bonds_events)
 crypto_events = compute_crisis_events_bc(crypto_events)
 
 # Compute crisis events for bonds and currencies (5 days lag)
-
 currencies_events_L5D = compute_crisis_events_bc(currencies_events_L5D)
 bonds_events_L5D = compute_crisis_events_bc(bonds_events_L5D)
 crypto_events_L5D = compute_crisis_events_bc(crypto_events_L5D)
 
 # Compute crisis events for bonds and currencies (20 days lag)
-
 currencies_events_L20D = compute_crisis_events_bc(currencies_events_L20D)
 bonds_events_L20D = compute_crisis_events_bc(bonds_events_L20D)
 crypto_events_L20D = compute_crisis_events_bc(crypto_events_L20D)
@@ -425,10 +393,6 @@ americas_events_L20D = compute_crisis_events_region(indices_americas_events_L20D
 europe_events_L20D = compute_crisis_events_region(indices_europe_events_L20D, "Europe")
 asia_events_L20D = compute_crisis_events_region(indices_asia_events_L20D, "Asia")
 
-
-# In[37]:
-
-
 # Compute global crisis events
 global_events = compute_crisis_events_global(americas_events, europe_events, asia_events)
 
@@ -438,66 +402,37 @@ global_events_L5D = compute_crisis_events_global(americas_events_L5D, europe_eve
 # Compute global crisis events (20 days lag)
 global_events_L20D = compute_crisis_events_global(americas_events_L20D, europe_events_L20D, asia_events_L20D)
 
-
-# In[38]:
-
-
 # Concat all classification events
 cross_product_event = pd.concat([currencies_events, bonds_events, crypto_events, americas_events, europe_events, asia_events, global_events], axis=1)
 cross_product_event_L5D = pd.concat([currencies_events_L5D, bonds_events_L5D, crypto_events_L5D, americas_events_L5D, europe_events_L5D, asia_events_L5D, global_events_L5D], axis=1)
 cross_product_event_L20D = pd.concat([currencies_events_L20D, bonds_events_L20D, crypto_events_L20D, americas_events_L20D, europe_events_L20D, asia_events_L20D, global_events_L20D], axis=1)
 
-
-# In[ ]:
-
-
 # Average number of events during the last 5 working days and the last 20 days [L5D, L20D],
 # based on the total number of events on a daily basis.
-
 average_sig_events = compute_average_sig_events(cross_product_event).dropna()
 average_sig_events_L20D = compute_average_sig_events(cross_product_event_L20D, 20).dropna()
-
-
-# In[ ]:
-
 
 # 5. Compute the average number of significant events during the last 5 working days and the last 20 days
 #    [L5D, L20D], based on previous values of the binary predictor variable (regional/global) which identifies
 #    whether the number of events exceeded a threshold someday (as described previously).
-
 average_events = compute_average_events(cross_product_event).dropna()
 average_events_L20D = compute_average_events(cross_product_event_L20D).dropna()
-
-
-# In[ ]:
-
-
 final_cross_product_event = pd.concat([cross_product_event, average_events, average_sig_events], axis=1).dropna()
 
 
-# ### Datasets for ML models
-
-# In[45]:
-
-
+## Datasets for ML models
 # Create various datatframes by relevant metric
-
-
 # Bonds Dataset + Classification
 b_ev = bonds_events.dropna()
 bonds_dataset = pd.concat([compute_returns(df_bonds), compute_vol(df_bonds)], axis = 1).dropna()
-
 
 # Currencies Dataset + Classification
 cu_ev = currencies_events.dropna()
 currencies_dataset = pd.concat([compute_returns(df_currencies), compute_vol(df_currencies)], axis = 1).dropna()
 
-
 # Crypto Dataset + Classification
 cr_ev = crypto_events.dropna()
 crypto_dataset = pd.concat([compute_returns(df_crypto), compute_vol(df_crypto)], axis = 1).dropna()
-
-
 
 # Indices Americas Dataset + Classification
 am_idx_ev = americas_events.dropna()
@@ -519,50 +454,18 @@ gl_idx_ev = global_events.dropna()
 indices_dataset = pd.concat([compute_returns(df_indices_americas), compute_vol(df_indices_americas), compute_returns(df_indices_europe), compute_vol(df_indices_europe),  compute_returns(df_indices_asia), compute_vol(df_indices_asia), gl_idx_ev], axis = 1).dropna()
 indices_dataset.to_csv(r'~/path/indices_dataset.csv', index = True)
 
-
-# In[46]:
-
-
 # Bonds dataset
-
 b_ev = generate_datasets_bonds(b_ev).iloc[:,-1].dropna()
 bonds_dataset = pd.concat([bonds_dataset, b_ev], axis = 1).dropna()
 bonds_dataset.to_csv(r'~/path/bonds_dataset.csv', index = True)
 
 # Currencies dataset
-
 cu_ev = generate_datasets_currencies(cu_ev).iloc[:,-1].dropna()
 currencies_dataset = pd.concat([currencies_dataset, cu_ev], axis = 1).dropna()
 currencies_dataset.to_csv(r'~/path/currencies_dataset.csv', index = True)
 
 
 # Crypto dataset
-
 cr_ev = generate_datasets_crypto(cr_ev).iloc[:,-1].dropna()
 crypto_dataset = pd.concat([crypto_dataset, cr_ev], axis = 1).dropna()
 crypto_dataset.to_csv(r'~/path/crypto_dataset.csv', index = True)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
