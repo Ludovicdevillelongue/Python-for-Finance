@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@authors: ludovic de Villelongue, Amine Mounazil, Emmanuel Zheng
+@authors: Ludovic de Villelongue, Amine Mounazil, Emmanuel Zheng
 """
 
 from datetime import datetime, timezone, timedelta
