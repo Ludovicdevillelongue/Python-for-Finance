@@ -53,7 +53,7 @@ StartTime=time.time()
 Import desired dataframe with variables score of 3 and more
 ------------------------------------------------------------
 '''
-df=pd.read_csv(r'C:/Users/ludov/Documents/Dauphine/M2/S1/Gestion Quantitative/projet/bonds_dataset.csv',index_col=0)
+df=pd.read_csv(r'trainset_2.csv',index_col=0)
 
 '''
 --------------Modification to perform-------------
